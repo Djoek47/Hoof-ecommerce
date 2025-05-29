@@ -7,7 +7,8 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://us-central1-my-project-test-450122.cloudfunctions.net/api"
+    "NEXT_PUBLIC_API_URL": "https://us-central1-my-project-test-450122.cloudfunctions.net/api",
+    "NEXT_PUBLIC_THIRDWEB_CLIENT_ID": "f9c44c905613fb9b0713a58c97734039"
   },
   "installCommand": "npm install --legacy-peer-deps"
 } 
