@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://us-central1-my-project-test-450122.cloudfunctions.net/api"
+  },
+  "installCommand": "npm install --legacy-peer-deps"
+} 

@@ -49,3 +49,4 @@ Thumbs.db
 !postcss.config.mjs
 !tailwind.config.js
 !components.json
+!vercel.json
