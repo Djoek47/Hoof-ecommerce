@@ -12,3 +12,8 @@ export interface CartState {
   isOpen: boolean
   cartUrl?: string
 }
+
+export interface CartIdentifier {
+  type: 'guest' | 'wallet';
+  id: string;
+}

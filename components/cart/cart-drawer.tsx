@@ -10,7 +10,7 @@ import { calculateCartTotal } from "@/lib/cart"
 
 export function CartDrawer() {
   const router = useRouter()
-  const { state, closeCart } = useCart()
+  const { state, closeCart, localCartItems, migrateLocalCartToWallet, currentWalletId } = useCart()
   const { items, isOpen } = state
 
   // Close cart when pressing escape key
@@ -43,6 +43,7 @@ export function CartDrawer() {
   if (!isOpen) return null
 
   const total = calculateCartTotal(items)
+  const showMigrateButton = currentWalletId && localCartItems.length > 0;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -69,7 +70,11 @@ export function CartDrawer() {
         <div className="flex-grow overflow-auto p-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
-              <p className="text-gray-400 mb-4">Your cart is empty</p>
+              {showMigrateButton ? (
+                 <p className="text-gray-400 mb-4">Your wallet cart is empty, but you have items in your local cart.</p>
+              ) : (
+                 <p className="text-gray-400 mb-4">Your cart is empty</p>
+              )}
               <Button onClick={closeCart} variant="outline">
                 Continue Shopping
               </Button>
@@ -83,17 +88,29 @@ export function CartDrawer() {
           )}
         </div>
 
-        {items.length > 0 && (
-          <div className="p-4 border-t border-gray-700">
-            <div className="flex justify-between mb-4">
-              <span className="text-gray-300">Subtotal</span>
-              <span className="text-gray-100 font-medium">${total.toFixed(2)}</span>
-            </div>
+        <div className="p-4 border-t border-gray-700">
+           {showMigrateButton && (
+              <Button
+                 onClick={migrateLocalCartToWallet}
+                 className="w-full mb-4 bg-green-500 hover:bg-green-600 text-dark-900"
+              >
+                 Migrate Local Cart to Wallet
+              </Button>
+           )}
+
+          {items.length > 0 && (
+             <div className="flex justify-between mb-4">
+               <span className="text-gray-300">Subtotal</span>
+               <span className="text-gray-100 font-medium">${total.toFixed(2)}</span>
+             </div>
+          )}
+
+          {items.length > 0 && (
             <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-dark-900" onClick={handleCheckout}>
               Checkout
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )
