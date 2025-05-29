@@ -275,6 +275,53 @@ app.post('/cart/clear', async (req, res) => {
   }
 });
 
+// Add migrate-local endpoint
+app.post('/cart/migrate-local', async (req, res) => {
+  try {
+    const { items: localCartItems }: { items: CartItem[] } = req.body;
+    const walletId = req.query.walletId as string;
+
+    // Require walletId for migration
+    if (!walletId) {
+      return res.status(400).json({ message: 'Wallet ID required for migration.' });
+    }
+
+    // Get the wallet cart identifier
+    const walletIdentifier = await getCartIdentifier(walletId);
+    if (!walletIdentifier || walletIdentifier.type !== 'wallet') {
+      return res.status(400).json({ message: 'Invalid wallet identifier for migration.' });
+    }
+
+    const walletCartPath = getCartPath(walletIdentifier);
+
+    // Fetch the user's existing wallet cart
+    console.log(`[migrate-local] Attempting to fetch wallet cart from: ${BUCKET_NAME}/${walletCartPath}`);
+    let walletCart = await loadCart(walletCartPath);
+
+    // Merge local cart items into the wallet cart
+    localCartItems.forEach((localItem: CartItem) => {
+      const existingItemIndex = walletCart.items.findIndex(walletItem => walletItem.id === localItem.id);
+      if (existingItemIndex > -1) {
+        walletCart.items[existingItemIndex].quantity += localItem.quantity;
+      } else {
+        walletCart.items.push(localItem);
+      }
+    });
+
+    // Save the merged cart
+    await saveCart(walletCartPath, walletCart);
+
+    res.json({
+      ...walletCart,
+      cartUrl: `https://storage.googleapis.com/${BUCKET_NAME}/${walletCartPath}`
+    });
+
+  } catch (error) {
+    console.error('Error migrating local cart:', error);
+    res.status(500).json({ message: 'Internal server error during migration.' });
+  }
+});
+
 // File upload route
 app.post('/upload', async (req, res) => {
   try {
