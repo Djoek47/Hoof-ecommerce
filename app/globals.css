@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Update the root variables to include our brand colors */
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+  --brand-yellow: 255, 184, 0;
+  --brand-orange: 255, 165, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  cursor: none;
+}
+
+/* Custom inverse cursor - updated with brand color */
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgb(var(--brand-yellow));
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+/* Inverse text selection - updated with brand color */
+::selection {
+  background-color: rgb(var(--brand-yellow));
+  color: #0a0a0a;
+}
+
+/* Click animation */
+@keyframes click {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cursor-click {
+  animation: click 0.3s ease-in-out;
+}
+
+/* Metaverse-inspired glowing effect */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, rgba(255, 184, 0, 0.5), rgba(255, 165, 0, 0));
+  border-radius: inherit;
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-effect:hover::after {
+  opacity: 1;
+}
+
+/* Ensure content is above the logo */
+section,
+h1,
+h2,
+h3,
+p {
+  position: relative;
+  z-index: 20;
+}
+
+/* Blur effect for when cart is open */
+.blur-effect {
+  transition: filter 0.3s ease;
+  filter: blur(5px);
+}
+
+/* Fix for video backgrounds */
+video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
